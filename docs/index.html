@@ -1,0 +1,12 @@
+<!doctype html><html lang="hr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#1F2429"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Fondovi"><link rel="apple-touch-icon" href="icons/icon-180.png"><link rel="icon" href="icons/icon-192.png"><title>Pregled</title>
+<style>body{margin:0;font:16px/1.5 system-ui,sans-serif;color:#1F2429;background:#fff;display:grid;place-items:center;min-height:100vh;padding:24px;box-sizing:border-box}p{max-width:340px;text-align:center}</style></head>
+<body><p id="p">Učitavam…</p><script>
+(async()=>{const P=t=>document.getElementById('p').textContent=t,d=s=>Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));
+let k=(location.hash.match(/k=([\w-]{43})/)||[])[1],iz=!!k;try{if(!k)k=localStorage.getItem('pregled_k')}catch(e){}
+if(navigator.serviceWorker)navigator.serviceWorker.register('sw.js').catch(()=>{});
+if(!k)return P('Ovu stranicu otvara samo osobna poveznica.');
+let b;try{const r=await fetch('data.enc',{cache:'no-store'});if(!r.ok)throw 0;b=d((await r.text()).trim())}catch(e){return P('Nema veze i nema spremljenih podataka. Pokušaj ponovno kad se spojiš.')}
+let t;try{const K=await crypto.subtle.importKey('raw',d(k+'='),'AES-GCM',false,['decrypt']);t=new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b.slice(0,12)},K,b.slice(12)))}catch(e){return P('Poveznica ne odgovara ovim podacima. Otvori najnoviju poveznicu.')}
+try{localStorage.setItem('pregled_k',k)}catch(e){}
+document.open();document.write(t);document.close()})();
+</script></body></html>
